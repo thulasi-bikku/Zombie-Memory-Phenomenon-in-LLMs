@@ -1,0 +1,17 @@
+name: paper-checks
+on: [push, pull_request]
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11"}
+      - run: pip install -r requirements.txt
+      - run: python tools/make_figures.py
+      - run: python tools/stats_check.py paper/main.tex
+      - run: python tools/check_paper.py paper/main.tex
+      - uses: xu-cheng/latex-action@v3
+        with:
+          root_file: main.tex
+          working_directory: paper
